@@ -1,0 +1,12 @@
+Package: Multimet_fxns
+Type: Package
+Title: Legacy functions related to building a multimetric index
+Version: 2.0.0
+Date: 2025-01-23
+Author: Karen Blocksom
+Maintainer: blocksom.karen@epa.gov
+Description: This is a set of legacy code used to generate documentation of various functions
+used to screen candidate metrics and run best subsets code to evaluate combinations of 
+metrics for use in a multimetric index.
+License: GPL
+RoxygenNote: 7.3.2
