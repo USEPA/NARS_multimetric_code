@@ -40,7 +40,11 @@
 #' quant_range_oth of 1/3, the difference between the 25th percentile and the 
 #' max is compared to the max/3. If the range is less than max/3, the metric 
 #' fails. Value should be a number between 0 and 1.
-
+#' @returns For each metric, provides metric name, overall RANGE_TEST result (PASS/ 
+#' PASS-/FAIL), skewness test result (zero_test, PASS/PASS-/FAIL), and
+#' range test result (rg_lim, PASS/FAIL). Along with these, the quantiles used
+#' to assess range and skewness are also provided: p0 = minimum, p100 = maximum,
+#' plower = minimum of 
 range_test <- function(df, 
                       perc_vars,
                       id_vars,
@@ -50,53 +54,74 @@ range_test <- function(df,
                       quant_range_perc = 15, 
                       quant_range_oth = 1/3){
 
-  metNames <- names(dfIn)[names(dfIn) %nin% idVars]
-  percVars.1 <- paste(percVars,collapse='|')
-  percNames <- grep(percVars.1,names(dfIn),value=TRUE)
+  met_names <- names(df)[!names(df) %in% id_vars]
+  perc_vars_1 <- paste(perc_vars, collapse='|')
+  perc_names <- grep(perc_vars_1, names(df), value=TRUE)
   
   # Check ranges of values of input arguments
-  if(quantZero<0|quantZero>1){
-    return(print("quantZero value needs to be between 0 and 1"))    
+  if(quant_zero < 0|quant_zero > 1){
+    return(print("quant_zero value needs to be between 0 and 1"))    
   }
-  if(quantRange<0|quantRange>1){
-    return(print("quantRange value needs to be between 0 and 1"))
+  if(quant_range < 0|quant_range > 1){
+    return(print("quant_range value needs to be between 0 and 1"))
   }
-  if(quantRange.oth<0|quantRange.oth>1){
-    return(print("quantRange.oth value needs to be between 0 and 1"))
+  if(quant_range_oth < 0|quant_range_oth > 1){
+    return(print("quant_range_oth value needs to be between 0 and 1"))
   }
-  if(!is.null(pass_) & pass_<0|pass_>quantZero){
-    return(print("pass_ value needs to be > 0 and < quantZero"))
+  if(!is.null(pass_) & pass_ < 0|pass_ > quant_zero){
+    return(print("pass_ value needs to be > 0 and < quant_zero"))
   }
   
   # Now melt input data frame
-  inLong <- tidyr::pivot_longer(dfIn, cols=names(dfIn)[names(dfIn) %nin% idVars], names_to='variable',
-                                values_drop_na=TRUE) %>%
-    dplyr::filter(!is.infinite(value)) %>% 
-    mutate(value=as.numeric(value))
+  in_long <- mutate(df, across(all_of(met_names), as.numeric)) |> 
+    tidyr::pivot_longer(cols = all_of(met_names), names_to='variable',
+                                values_drop_na=TRUE) |>
+    dplyr::filter(!is.infinite(value)) 
   
   # First get quantiles based on inputs
-  rgQAll <- ddply(inLong,c('variable'),summarise,p0=min(value,na.rm=T),p100=max(value,na.rm=T)
-                  ,plower=quantile(value,probs=(1-quantZero),na.rm=T),pupper=quantile(value,probs=(quantZero),na.rm=T),
-                  prob.lower.rg=quantile(value, probs=(1-quantRange), na.rm=T))
-  
+  rg_q_all <- in_long |> 
+    dplyr::group_by(variable) |> 
+    dplyr::summarise(
+      p0 = min(value, na.rm = T),
+      p100 = max(value, na.rm = T),
+      plower = quantile(value, probs = (1-quant_zero), na.rm=T),
+      pupper = quantile(value, probs = (quant_zero), na.rm=T),
+      prob_lower_rg = quantile(value, probs=(1 - quant_range), na.rm=T)) |> 
+    dplyr::ungroup()
+    
   if(!is.null(pass_)){
-    rgQpass_ <- ddply(inLong,c('variable'),summarise,pmid=quantile(value,probs=pass_,na.rm=T))
-    rgQAll <- merge(rgQAll,rgQpass_,by='variable')
+    rg_q_pass_ <- in_long |> 
+      dplyr::group_by(variable) |> 
+      dplyr::summarise(pmid = quantile(value, probs = pass_, na.rm=T)) |> 
+      dplyr::ungroup()
+    
+    rg_q_all <- merge(rg_q_all, rg_q_pass_, by='variable')
   }else{
-    rgQAll <- mutate(pmid=NA)
+    rg_q_all <- dplyr::mutate(pmid=NA)
   }
   
   # Range test - apply percentiles calculated above to test range of metrics
-  rgTestAll <- mutate(rgQAll,zeroTest=ifelse(pupper==p0|plower==p100|pupper==0,'FAIL',
-                                             ifelse(!is.null(pass_) & pmid==p0,'PASS-','PASS')),
-                      rgLim=ifelse((variable %in% percNames & (p100-prob.lower.rg)<quantRange.perc)|
-                                     (variable %nin% percNames & (p100-prob.lower.rg)<((p100-p0)*quantRange.oth)),'FAIL','PASS'))
+  rg_test_all <- mutate(rg_q_all,
+                        zero_test = dplyr::case_when(
+                          pupper == p0 ~ 'FAIL', # large proportion equal to minimum
+                          plower == p100 ~ 'FAIL', # large proportion equal to maximum
+                          pupper == 0 ~ 'FAIL', # all zeros
+                          !is.null(pass_) & pmid == p0 ~ 'PASS-', # pass- proportion equal to minimum
+                          .default = 'PASS'),
+                      rg_lim = dplyr::case_when(
+                        (variable %in% perc_names) & ((p100-prob_lower_rg) < quant_range_perc) ~ 'FAIL', # for % variable, examined range is less than specified min range
+                        (!(variable %in% perc_names) & ((p100-prob_lower_rg) < ((p100-p0)*quant_range_oth))) ~ 'FAIL', # if not % variable, examined range smaller than proportion of full range
+                        .default = 'PASS'))
   
-  rgOutAll <- mutate(rgTestAll,RANGE_TEST=ifelse(zeroTest=='FAIL'|rgLim=='FAIL','FAIL'
-                                                 ,ifelse(zeroTest=='PASS-','PASS-','PASS')),METRIC=as.character(variable)) %>%
+  rg_out_all <- mutate(rg_test_all,
+                       RANGE_TEST = dplyr::case_when(
+                         zero_test=='FAIL'|rg_lim=='FAIL' ~ 'FAIL', # if either part of test fails, FAIL
+                         zero_test == 'PASS-' ~ 'PASS-', # if first test gets PASS- but rg_lim = PASS
+                         .default = 'PASS'), # otherwise PASS
+                       METRIC = as.character(variable)) |>
     select(-variable)
   
-  return(rgOutAll)
+  return(rg_out_all)
   
 }
 

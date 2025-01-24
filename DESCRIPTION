@@ -8,5 +8,6 @@ Maintainer: blocksom.karen@epa.gov
 Description: This is a set of legacy code used to generate documentation of various functions
 used to screen candidate metrics and run best subsets code to evaluate combinations of 
 metrics for use in a multimetric index.
+Imports: tidyverse, Hmisc
 License: GPL
 RoxygenNote: 7.3.2
