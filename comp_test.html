@@ -1,0 +1,88 @@
+<!DOCTYPE html><html><head><title>R: Metric comparison test</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>comp_test</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Metric comparison test</h2>
+
+<h3>Description</h3>
+
+<p>This function compares the most and least disturbed using a Kruskal-Wallis 
+test because metrics are typically somewhat skewed. It also performs a box 
+plot comparison using scoring developed by Tetra Tech for Florida SCI.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>comp_test(df, id_vars, ref_var, least, most)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="df">df</code></td>
+<td>
+<p>Wide data frame with one row per sample. It is assumed to only 
+contain one sample per sites, so if there are revisits, keep only the one 
+visit. It is also assumed that all metrics are numeric, so remove any that 
+are not. This data frame should include variables to identify samples and a 
+single variable for level of disturbance. The data frame should include only 
+the most and least disturbed classes. Some consolidation of classes may be 
+desirable, depending on the situation.</p>
+</td></tr>
+<tr><td><code id="id_vars">id_vars</code></td>
+<td>
+<p>This is a character vector with variables to identify samples
+in the data frame.</p>
+</td></tr>
+<tr><td><code id="ref_var">ref_var</code></td>
+<td>
+<p>String identifying the variable with disturbance condition 
+for each site</p>
+</td></tr>
+<tr><td><code id="least">least</code></td>
+<td>
+<p>String representing value of ref_var indicating least 
+disturbed condition</p>
+</td></tr>
+<tr><td><code id="most">most</code></td>
+<td>
+<p>String representing value of ref_var indicating most 
+disturbed condition</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The output data frame includes metric, KW_stat (Kruskal-Wallis test 
+statistic), KW_pval (Kruskal-Wallis test p-value), and box_score (0-3). 
+The box_score represents the degree of boxplot overlap between the least 
+and most disturbed groups of sites: 0 indicates overlap of median of each 
+group with interquartile range (box) of other group; 
+1 indicates one median does not overlap with box of other group; 2 
+indicates median of each group does not overlap with box of other group, 
+but boxes overlap; and 3 indicates no overlap of box of each group with 
+other group. A box_score of 3 indicates the highest level of discrimination 
+for a metric.
+</p>
+
+</main>
+
+</div>
+</body></html>

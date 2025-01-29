@@ -1,18 +1,8 @@
 library(tidyverse)
+library(lme4)
 
 source(paste0(here::here(), "/r/range_test.r"))
-
-veg_met <- read.delim("c:/users/kblockso/onedrive - environmental protection agency (EPA)/documents/nars/rscripts/metric eval vegetation testing/VegMetrics.tab", sep = '\t')
-
-sites <- read.delim("c:/users/kblockso/onedrive - environmental protection agency (EPA)/documents/nars/rscripts/metric eval vegetation testing/SiteInfo.tab", sep = '\t') |> 
-  select(UID,REF_NWCA)
-
-# Make sure all metrics in this data frame are numeric and remove any in this step that are not
-v_in_first <- filter(veg_met, SITE_USE != 'NWCA_REVISITS') |> 
-  select(-c(DOM_SANDT, LITTER_TYPE, 
-                           PUBLICATION_DATE, VISIT_NO, SITE_USE, STATE, SITE_ID))
-  
-
+ # Range test
 rg_test_data <- read_csv(paste0(here::here(), "/Range_test_testdata.csv"))
 
 test_rg <- range_test(rg_test_data, 
@@ -37,3 +27,43 @@ inner_join(test_rg, exp_rg, by = 'METRIC') |>
   filter(zero_test.x != zero_test.y|
            rg_lim.x!=rg_lim.y|
            RANGE_TEST.x!=RANGE_TEST.y) # Should be 0
+
+
+# Redundancy test
+source(paste0(here::here(), "/r/redund_test.r"))
+
+redund_test_data <- read_csv(paste0(here::here(), "/Redund_test_testdata.csv"))
+test_redund <- redund_test(redund_test_data, id_vars = 'UID', cutoff = 0.70)
+
+
+# Comparison test
+source(paste0(here::here(), "/r/comp_test.r"))
+
+comp_test_data <- read_csv(paste0(here::here(), "/Boxplot_comp_test_testdata.csv")) |> 
+  mutate(REF_ALT = case_when(
+    REF_NWCA == 'L' ~ 'R',
+    REF_NWCA == 'M' ~ 'T',
+    .default = REF_NWCA
+  )) |> 
+  select(-REF_NWCA)
+
+test_comp <- comp_test(comp_test_data, 
+                       id_vars = 'UID',
+                       ref_var = 'REF_ALT', 
+                       least = 'R', 
+                       most = 'T')
+
+comp_test_long <- pivot_longer(comp_test_data, cols = N_MONOCOT:FQAI_COV_NAT) |> 
+  filter(REF_ALT != 'I')
+ggplot(comp_test_long, aes(x = REF_ALT, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~ name, scales = 'free_y')
+
+# Signal-to-noise
+source(paste0(here::here(), "/r/sn_test.r"))
+
+sn_test_data <- read_csv(paste0(here::here(), "/SN_test_testdata.csv"))
+
+test_sn <- sn_test(sn_test_data,
+                   id_vars_samp = 'UID',
+                   id_vars_site = 'SITE_ID') 

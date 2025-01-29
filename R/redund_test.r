@@ -32,17 +32,16 @@ redund_test <- function(df, id_vars, cutoff){
   corr_out <- data.frame(metric = character(), 
                          redund_met = character())
   
-  met_list <-unique(corr_in$variable)
-  for(i in 1:length(met_list)){
+  for(i in 1:length(met_names)){
     print(i)
     # Make sure to alter to exclude the id variables used in melting the input data
-    cor_met <- cor(subset(corr_in, variable==met_list[i], select='value'),
-                  subset(df_in, select=names(df_in) %nin% c(id_vars, met_list[i])),
+    cor_met <- cor(subset(corr_in, variable==met_names[i], select='value'),
+                  subset(df_in, select=!(names(df_in) %in% c(id_vars, met_names[i]))),
                   method="pearson")
     red_met <- data.frame(metric = attr(cor_met,"dimnames")[[2]],
                          r = cor_met[1:length(cor_met)]) |> 
-      subset(abs(R)>=cutoff, select='METRIC')
-    red_list <- data.frame(metric = met_list[i],
+      subset(abs(r)>=cutoff, select='metric')
+    red_list <- data.frame(metric = met_names[i],
                           redund_met = paste(red_met$metric, collapse=","))
     corr_out <- rbind(corr_out, red_list)
   }
