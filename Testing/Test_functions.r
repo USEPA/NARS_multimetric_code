@@ -75,7 +75,7 @@ metlist <- read_csv(paste0(here::here(), "/Testing/vegmetlist_bytype.csv"))
 mets <- read_csv(paste0(here::here(), "/Testing/Veg_scored_mets.csv")) |> 
   mutate(indvis = if_else(VISIT_NO=='1', 'Yes', 'No'))
 
-prIBI_test <- prIBI_byType(df = mets, 
+prIBI_bytype_test <- prIBI_byType(df = mets, 
                            metList = metlist,
                            idVars = 'UID', 
                            siteVar = 'SITE_ID', 
@@ -84,5 +84,25 @@ prIBI_test <- prIBI_byType(df = mets,
                            indexvis = 'indvis', 
                            least = 'L',
                            most = 'M', 
+                           nsamp = 1000, 
+                           seed = 20160310)
+
+# ProcIBI by number of metrics code
+source(paste0(here::here(), "/r/ProcIBI_General_byNumMets.r"))
+
+metlist <- read_csv(paste0(here::here(), "/Testing/vegmetlist_bytype.csv"))$METRIC 
+mets <- read_csv(paste0(here::here(), "/Testing/Veg_scored_mets.csv")) |> 
+  mutate(indvis = if_else(VISIT_NO=='1', 'Yes', 'No'))
+
+prIBI_bynum_test <- prIBI_byNumMets(df = mets, 
+                           metList = metlist,
+                           idVars = 'UID', 
+                           siteVar = 'SITE_ID', 
+                           refVar = 'REF_NWCA', 
+                           year = NULL, 
+                           indexvis = 'indvis', 
+                           least = 'L',
+                           most = 'M', 
+                           nummets = c(4, 6, 8),
                            nsamp = 1000, 
                            seed = 20160310)

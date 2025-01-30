@@ -1,0 +1,152 @@
+<!DOCTYPE html><html><head><title>R: Construct and evaluate MMI based on various numbers of...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>prIBI_byNumMets</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Construct and evaluate MMI based on various numbers of metrics, 
+regardless of metric type.</h2>
+
+<h3>Description</h3>
+
+<p>This function allows the user to automate the process of constructing and 
+comparing multimetric indices built from various numbers of metrics. 
+This particular function allows the user to 
+decide on the number of iterations to compare, with a default of 1000. 
+This version of the function uses an input of metric names and
+uses this information to construct random combinations of metrics built 
+using specified numbers of metric. 
+Several tests are carried out and results are provided for 
+each constructed MMI as the output of this function. The tests include the 
+mean and standard deviation of reference sites, proportion of intermediate 
+and most disturbed sites statistically below reference (interval test), 
+and mean and max correlations among metrics within a given MMI. A signal-to-
+noise statistic is also calculated for each constructed MMI. 
+This code can be customized for the type of data available to the user, so 
+some tests can be dropped and others added. The primary benefit of this
+code is the set up of randomly selected combinations of metrics.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>prIBI_byNumMets(
+  df,
+  metList,
+  idVars,
+  siteVar = "SITE_ID",
+  refVar,
+  year = NULL,
+  indexvis,
+  least,
+  most,
+  nummets,
+  nsamp = 1000,
+  seed = 20160310
+)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="df">df</code></td>
+<td>
+<p>Input data frame with each sample in one row, with sample-identifying 
+variables and metrics as columns. Assumed to have metrics already scored or 
+rescaled (in whatever manner is desired). Ideally, the MMI is 
+built on only calibration sites, and it is assumed any sites in the input 
+dataset will be included in MMI development, so exclude any sites that 
+shouldn't be used ahead of time. It is assumed that there are multiple visits 
+for some sites and that the 'indexvis' argument identifies the visit to use 
+for most tests (except signal-to-noise). The default value for the Site 
+identifier is 'SITE_ID'.</p>
+</td></tr>
+<tr><td><code id="metList">metList</code></td>
+<td>
+<p>Vector of metric names to be used in selecting metrics to
+combine into candidate multimetric indices (MMIs). If scored metrics have 
+different names than raw metric values, be sure these 
+names are the ones in this data frame.</p>
+</td></tr>
+<tr><td><code id="idVars">idVars</code></td>
+<td>
+<p>Variable or combination of variables in 'df' used to 
+identify individual samples.</p>
+</td></tr>
+<tr><td><code id="siteVar">siteVar</code></td>
+<td>
+<p>String containing name of variable that identifies unique 
+site ID (across years if site was sampled in multiple years). 
+Default value is SITE_ID.</p>
+</td></tr>
+<tr><td><code id="refVar">refVar</code></td>
+<td>
+<p>String containing name of reference variable in the dataset</p>
+</td></tr>
+<tr><td><code id="year">year</code></td>
+<td>
+<p>String containing the name of the year variable in the dataset. 
+The default value is NULL. If NULL, signal-to-noise calculation is based
+only on within year revisits.</p>
+</td></tr>
+<tr><td><code id="indexvis">indexvis</code></td>
+<td>
+<p>String containing name of variable to identify whether a 
+visit is the index visit to a site, with values of Yes/No. If a record has
+an indexvis value of No, it will only be included in signal-to-noise 
+calculations.</p>
+</td></tr>
+<tr><td><code id="least">least</code></td>
+<td>
+<p>Value of 'refVar' for least disturbed sites in dataset</p>
+</td></tr>
+<tr><td><code id="most">most</code></td>
+<td>
+<p>Value of 'refVar' for most disturbed sites in dataset</p>
+</td></tr>
+<tr><td><code id="nummets">nummets</code></td>
+<td>
+<p>Numeric vector with numbers of metrics to test 
+(i.e., c(4,6) tests combinations of 4 metrics and 6 metrics)</p>
+</td></tr>
+<tr><td><code id="nsamp">nsamp</code></td>
+<td>
+<p>Number of random combinations to test for each number of 
+metrics, with a default of 1000.</p>
+</td></tr>
+<tr><td><code id="seed">seed</code></td>
+<td>
+<p>Random seed to supply to random number generator used to 
+randomly select metric combinations. Default is 20160310.</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>A data frame containing the iteration number, 
+and for each iteration, the combination of metrics in the MMI,
+percent of most disturbed sites falling statistically below reference 
+(interval test, pct_MMI_M), mean MMI score among reference sites (mn_mmi_ref),
+standard deviation among reference sites (sd_mmi_ref), 
+signal-to-noise ratio, maximum correlation among
+metrics (max_corr), and mean correlation among metrics (mean_corr).
+</p>
+
+</main>
+
+</div>
+</body></html>

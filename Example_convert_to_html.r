@@ -11,3 +11,5 @@ tools::Rd2HTML(Rd = paste0(here::here(), "/man/sn_test.Rd"), out = paste0(here::
 tools::Rd2HTML(Rd = paste0(here::here(), "/man/redund_test.Rd"), out = paste0(here::here(), "/html/redund_test.html"))
 
 tools::Rd2HTML(Rd = paste0(here::here(), "/man/prIBI_byType.Rd"), out = paste0(here::here(), "/html/prIBI_byType.html"))
+
+tools::Rd2HTML(Rd = paste0(here::here(), "/man/prIBI_byNumMets.Rd"), out = paste0(here::here(), "/html/prIBI_byNumMets.html"))
