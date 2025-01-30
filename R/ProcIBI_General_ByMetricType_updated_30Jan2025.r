@@ -54,9 +54,6 @@
 #' metrics (max_corr), and mean correlation among metrics (mean_corr).
 
 # Load Packages for Analysis
-library(tidyverse)
-library(lme4)
-
 prIBI_byType <- function(df, 
                          metList,
                          idVars, 
@@ -108,7 +105,9 @@ prIBI_byType <- function(df,
 
   # Now we need to sort out the metric list by type
   metList <- metList[order(metList$TYPE, metList$METRIC),] |> 
-    mutate(TYPE=as.character(TYPE),METRIC=as.character(METRIC))
+    mutate(TYPE = as.character(TYPE), 
+           METRIC = as.character(METRIC)
+           )
 
   # Get number of metrics from the number of unique TYPE values 
   #     We will choose one of each type for each possibly MMI
