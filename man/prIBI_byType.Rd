@@ -45,7 +45,8 @@ Default value is SITE_ID.}
 \item{refVar}{String containing name of reference variable in the dataset}
 
 \item{year}{String containing the name of the year variable in the dataset. 
-The default value is NULL. If NULL, signal-to-noise calculation is skipped.}
+The default value is NULL. If NULL, signal-to-noise calculation is based
+only on within year revisits.}
 
 \item{indexvis}{String containing name of variable to identify whether a 
 visit is the index visit to a site, with values of Yes/No. If a record has
@@ -67,7 +68,7 @@ and for each iteration, the combination of metrics in the MMI,
 percent of most disturbed sites falling statistically below reference 
 (interval test, pct_MMI_M), mean MMI score among reference sites (mn_mmi_ref),
 standard deviation among reference sites (sd_mmi_ref), 
-signal-to-noise ratio (if calculated, sn_mmi), maximum correlation among
+signal-to-noise ratio, maximum correlation among
 metrics (max_corr), and mean correlation among metrics (mean_corr).
 }
 \description{

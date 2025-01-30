@@ -96,7 +96,8 @@ Default value is SITE_ID.</p>
 <tr><td><code id="year">year</code></td>
 <td>
 <p>String containing the name of the year variable in the dataset. 
-The default value is NULL. If NULL, signal-to-noise calculation is skipped.</p>
+The default value is NULL. If NULL, signal-to-noise calculation is based
+only on within year revisits.</p>
 </td></tr>
 <tr><td><code id="indexvis">indexvis</code></td>
 <td>
@@ -132,7 +133,7 @@ and for each iteration, the combination of metrics in the MMI,
 percent of most disturbed sites falling statistically below reference 
 (interval test, pct_MMI_M), mean MMI score among reference sites (mn_mmi_ref),
 standard deviation among reference sites (sd_mmi_ref), 
-signal-to-noise ratio (if calculated, sn_mmi), maximum correlation among
+signal-to-noise ratio, maximum correlation among
 metrics (max_corr), and mean correlation among metrics (mean_corr).
 </p>
 

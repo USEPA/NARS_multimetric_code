@@ -35,7 +35,8 @@
 #' Default value is SITE_ID.
 #' @param refVar String containing name of reference variable in the dataset
 #' @param year String containing the name of the year variable in the dataset. 
-#' The default value is NULL. If NULL, signal-to-noise calculation is skipped.
+#' The default value is NULL. If NULL, signal-to-noise calculation is based
+#' only on within year revisits.
 #' @param indexvis String containing name of variable to identify whether a 
 #' visit is the index visit to a site, with values of Yes/No. If a record has
 #' an indexvis value of No, it will only be included in signal-to-noise 
@@ -50,7 +51,7 @@
 #' percent of most disturbed sites falling statistically below reference 
 #' (interval test, pct_MMI_M), mean MMI score among reference sites (mn_mmi_ref),
 #' standard deviation among reference sites (sd_mmi_ref), 
-#' signal-to-noise ratio (if calculated, sn_mmi), maximum correlation among
+#' signal-to-noise ratio, maximum correlation among
 #' metrics (max_corr), and mean correlation among metrics (mean_corr).
 
 # Load Packages for Analysis
@@ -67,7 +68,7 @@ prIBI_byType <- function(df,
                          seed = 20160310){
   # Step 1 - Prepare datasets from inputs
   # First, a list of metric names to keep from input data frame
-  df_1 <- base::subset(df, select=names(dfIn) %in% 
+  df_1 <- base::subset(df, select=names(df) %in% 
                          c(idVars, refVar, siteVar, indexvis, 
                            year, metList$METRIC)) 
   
@@ -75,7 +76,7 @@ prIBI_byType <- function(df,
     names(df_1)[names(df_1)==year] <- 'year'
   }
   
-  df_1$sitevar <- df_1[, siteVar]
+  df_1 <- dplyr::rename(df_1, site_use = siteVar)
   
   sum(complete.cases(df_1[,metList$METRIC])); #check for missing metric data;
   # delete any sites having incomplete metric data for all candidates;
@@ -86,7 +87,7 @@ prIBI_byType <- function(df,
   # Datasets are ready for random MMI construction
   # Step 2 - Calculate critical values of interval-test statistics
   # First, critical values for MMI tests
-  type_cnt <- table(df_2[,refVar],df_2[,indexvis]) # count sites, each disturbance class (L-I-M)
+  type_cnt <- with(df_2, table(eval(as.name(refVar)), eval(as.name(indexvis)))) # count sites, each disturbance class (L-I-M)
   print(type_cnt)
   
   n_ref <- type_cnt[least, 'Yes'] # number of reference sites that are index visits
@@ -120,7 +121,7 @@ prIBI_byType <- function(df,
   #loop over base samples,, and populate the added-metrics in data frames
   set.seed(seed)
   for(k in 1:nsamp) {
-    met_samp[k,] < -tapply(metList$METRIC, metList$TYPE,
+    met_samp[k,] <- tapply(metList$METRIC, metList$TYPE,
                            function(x) sample(x, size=1))
   } #end of loop  
   
@@ -152,13 +153,13 @@ prIBI_byType <- function(df,
       # first create and report the current metric set
       curmets <- met_samp[nmet_res$baseind[j],]
      
-      nmet_res$mets[j] <- paste(as.character(curmets),collapse=", ")
+      nmet_res$mets[j] <- paste(as.character(curmets), collapse=", ")
        
     # Next are interval tests for all test sites
     # Calculate vector of MMI at all sites, equal to sum of scored metrics,
     # Scaled by 10/nummet, to put on 100-point scale
       
-      IBI_cur <- rowSums(scored_mets[, curmets])*10/nmet_res$nummet[j]
+      IBI_cur <- rowSums(mets[, curmets])*10/nmet_res$nummet[j]
     # mean of IBI and and its squared SE, for ref sites and first visit only
       ibi_ref_mn <- mean(IBI_cur[df_2[, refVar]==least & df_2[, indexvis]=='Yes'])
       nmet_res$mn_mmi_ref[j] <- ibi_ref_mn
@@ -168,7 +169,7 @@ prIBI_byType <- function(df,
   
     # next extract the subset of test-site MMI scores, for either most disturbed (M) or Intermediate 
     # distubance (I)
-      IBI_sub_M <- IBI_cur[as.character(df_2[, refVar])==most & df_2[, indexvis]=='Yes'] 
+      IBI_sub_M <- IBI_cur[df_2[, refVar]==most & df_2[, indexvis]=='Yes'] 
         
     # Vector of 1-sample F-scores, all test sites;
       F_ibi_M <- ((ibi_ref_mn-IBI_sub_M)^2)/ibi_ref_se2
@@ -178,11 +179,11 @@ prIBI_byType <- function(df,
   
     # S/N ratio for MMI 
      if(!is.null(year)){
-       cur_temp <- data.frame(sitevar = as.character(df_2$sitevar), 
+       cur_temp <- data.frame(sitevar = df_2$site_use, 
                               year = df_2$year,
                               IBI_cur)
      }else{
-       cur_temp <- data.frame(sitevar = as.character(df_2$sitevar),
+       cur_temp <- data.frame(sitevar = df_2$site_use,
                               IBI_cur)
      }
      
@@ -222,12 +223,12 @@ prIBI_byType <- function(df,
       }  		      
       
     # Max and mean correlations among metrics in MMI
-      corr_cur <- as.dist(cor(scored_mets[, curmets],method='pearson'))
+      corr_cur <- as.dist(cor(mets[, curmets], method='pearson'))
       nmet_res$max_corr[j] <- round(max(corr_cur), digits=3)
       nmet_res$mean_corr[j] <- round(mean(corr_cur), digits=3)
     } # end of trial loop
 
-    elaps <- proc.time()-start.time
+    elaps <- proc.time()-start_time
     print(c("elapsed time = ", elaps))
 
   return(nmet_res)
