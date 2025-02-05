@@ -106,3 +106,14 @@ prIBI_bynum_test <- prIBI_byNumMets(df = mets,
                            nummets = c(4, 6, 8),
                            nsamp = 1000, 
                            seed = 20160310)
+
+# Relative scope of impairment
+source(paste0(here::here(), "/r/relSOI_test.r"))
+
+soi_test_data <- read_csv(paste0(here::here(), "/Testing/Boxplot_comp_test_testdata.csv")) 
+
+soi_test <- relSOI_test(soi_test_data,
+                        id_vars = 'UID',
+                        ref_var = 'REF_NWCA', 
+                        least = 'L', 
+                        most = 'M')
