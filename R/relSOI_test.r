@@ -23,7 +23,12 @@
 #' disturbed condition
 #' @param most String representing value of ref_var indicating most 
 #' disturbed condition
-#' @returns The output data frame includes metric,  
+#' @returns The output data frame includes metric, least disturbed 25th 
+#' percentile (L_q1), least disturbed 75th percentile (L_q3), least disturbed
+#' median (L_median), most disturbed median (M_median), maximum value (max_val),
+#' metric direction (POS/NEG, metdir), and  relative scope of impairment (soi). 
+#' Desirable values of SOI are 1 or less. Higher values indicate excessive 
+#' reference site variability.
 #' @references 
 #' Blocksom, KA, and BR Johnson. 2009. Development of a regional
 #' macroinvertebrate index for large river bioassessment. Ecological 
@@ -33,15 +38,21 @@
 #' SM Cormier. 2002. Methods development and use of macroinvertebrates as 
 #' indicators of ecological condition for streams in the Mid-Atlantic 
 #' Highlands region. Environmental Monitoring and Assessment 78:169-212.
+#' 
+#' USEPA, 1998. Lake and Reservoir Bioassessment and Biocriteria Technical 
+#' Guidance Document, EPA/841/B-98/007, U.S. Environmental Protection Agency, 
+#' Office of Wetlands, Oceans, and Watersheds, Office of Science and 
+#' Technology, Office of Water, Washington, D.C.
 relSOI_test <- function(df, id_vars, ref_var, least, most){
   met_names <- names(df)[!names(df) %in% c(ref_var, id_vars)]
+  
+  names(df)[names(df) == ref_var] <- 'ref_vals'
   
   df_in <- df |> 
     mutate(across(all_of(met_names), as.numeric)) |> 
     pivot_longer(cols = all_of(met_names), 
                  names_to='metric', 
                  values_drop_na=TRUE) |> 
-    dplyr::rename(ref_vals = ref_var) |> 
     filter(ref_vals %in% c(least, most)) |> 
     mutate(ref_vals = case_when(
       ref_vals == least ~ 'L',
@@ -64,8 +75,8 @@ relSOI_test <- function(df, id_vars, ref_var, least, most){
       group_by(metric, ref_vals) |> 
       summarise(q1 = quantile(value, probs = 0.25),
                 q3 = quantile(value, probs = 0.75),
-                median = quantile(value, probs = 0.50)) |> 
-      ungroup() |> 
+                median = quantile(value, probs = 0.50),
+                .groups = 'drop') |> 
       pivot_longer(cols = q1:median) |> 
       pivot_wider(id_cols = metric, 
                   names_from = c(ref_vals, name),
@@ -84,7 +95,7 @@ relSOI_test <- function(df, id_vars, ref_var, least, most){
     
     # Now combine into one data frame to calculate ROI
     soi <- metdir |> 
-      mutate(roi = case_when(
+      mutate(soi = case_when(
         metdir == 'POS' ~ round((L_q3 - L_q1)/L_q1, 3),
         metdir == 'NEG' ~ round((L_q3 - L_q1)/(max_val - L_q3), 3)
       ))

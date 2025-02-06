@@ -1,0 +1,107 @@
+<!DOCTYPE html><html><head><title>R: Relative scope of impairment</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.css">
+<script type="text/javascript">
+const macros = { "\\R": "\\textsf{R}", "\\code": "\\texttt"};
+function processMathHTML() {
+    var l = document.getElementsByClassName('reqn');
+    for (let e of l) { katex.render(e.textContent, e, { throwOnError: false, macros }); }
+    return;
+}</script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.3/dist/katex.min.js"
+    onload="processMathHTML();"></script>
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>relSOI_test</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Relative scope of impairment</h2>
+
+<h3>Description</h3>
+
+<p>This function calculate the relative scope of impairment of a metric, based 
+on the reference designations provided by the user. Relative
+scope of impairment (SOI) is calculated as the ratio of the range
+of possible impairment (values beyond the poorer quality 25th
+percentile) and the interquartile range (IQR) of reference sites, a measure of
+variability. Relative SOI values larger than 1 are more desirable,
+with values less than 1 indicating too much variability among
+reference sites compared to the range of impairment.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>relSOI_test(df, id_vars, ref_var, least, most)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table>
+<tr><td><code id="df">df</code></td>
+<td>
+<p>Wide data frame with one row per sample. It is assumed to only 
+contain one sample per sites, so if there are revisits, keep only the one 
+visit. It is also assumed that all metrics are numeric, so remove any that 
+are not. This data frame should include variables to identify samples and a 
+single variable for level of disturbance. The data frame should include only 
+the most and least disturbed classes. Some consolidation of classes may be 
+desirable, depending on the situation.</p>
+</td></tr>
+<tr><td><code id="id_vars">id_vars</code></td>
+<td>
+<p>This is a character vector with variables to identify samples
+in the data frame.</p>
+</td></tr>
+<tr><td><code id="ref_var">ref_var</code></td>
+<td>
+<p>String identifying the variable with disturbance condition 
+for each site</p>
+</td></tr>
+<tr><td><code id="least">least</code></td>
+<td>
+<p>String representing value of ref_var indicating least 
+disturbed condition</p>
+</td></tr>
+<tr><td><code id="most">most</code></td>
+<td>
+<p>String representing value of ref_var indicating most 
+disturbed condition</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>The output data frame includes metric, least disturbed 25th 
+percentile (L_q1), least disturbed 75th percentile (L_q3), least disturbed
+median (L_median), most disturbed median (M_median), maximum value (max_val),
+metric direction (POS/NEG, metdir), and  relative scope of impairment (soi). 
+Desirable values of SOI are 1 or less. Higher values indicate excessive 
+reference site variability.
+</p>
+
+
+<h3>References</h3>
+
+<p>Blocksom, KA, and BR Johnson. 2009. Development of a regional
+macroinvertebrate index for large river bioassessment. Ecological 
+Indicators 9:313-328.
+</p>
+<p>Klemm, DJ, KA Blocksom, WT Thoeny, FA Fulk, AT Herlihy, PR Kaufmann, and
+SM Cormier. 2002. Methods development and use of macroinvertebrates as 
+indicators of ecological condition for streams in the Mid-Atlantic 
+Highlands region. Environmental Monitoring and Assessment 78:169-212.
+</p>
+<p>USEPA, 1998. Lake and Reservoir Bioassessment and Biocriteria Technical 
+Guidance Document, EPA/841/B-98/007, U.S. Environmental Protection Agency, 
+Office of Wetlands, Oceans, and Watersheds, Office of Science and 
+Technology, Office of Water, Washington, D.C.
+</p>
+
+</main>
+
+</div>
+</body></html>

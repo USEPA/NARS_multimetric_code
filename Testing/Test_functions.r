@@ -117,3 +117,4 @@ soi_test <- relSOI_test(soi_test_data,
                         ref_var = 'REF_NWCA', 
                         least = 'L', 
                         most = 'M')
+
