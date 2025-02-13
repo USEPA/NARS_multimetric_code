@@ -34,10 +34,10 @@ comp_test <- function(df, id_vars, ref_var, least, most){
   
   df_in <- df |> 
     mutate(across(all_of(met_names), as.numeric)) |> 
-    pivot_longer(cols = met_names, 
+    pivot_longer(cols = all_of(met_names), 
                         names_to='variable', 
                         values_drop_na=TRUE) |> 
-    dplyr::rename(ref_vals = ref_var) |> 
+    dplyr::rename(ref_vals = eval(ref_var)) |> 
     filter(ref_vals %in% c(least, most)) |> 
     mutate(ref_vals = case_when(
       ref_vals == least ~ 'L',

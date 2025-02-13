@@ -76,7 +76,7 @@ prIBI_byType <- function(df,
     names(df_1)[names(df_1)==year] <- 'year'
   }
   
-  df_1 <- dplyr::rename(df_1, site_use = siteVar)
+  df_1 <- dplyr::rename(df_1, site_use = all_of(siteVar))
   
   sum(complete.cases(df_1[,metList$METRIC])); #check for missing metric data;
   # delete any sites having incomplete metric data for all candidates;

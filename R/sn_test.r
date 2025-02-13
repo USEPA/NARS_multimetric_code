@@ -44,23 +44,23 @@ sn_test <- function(df,
   met_names <- names(df)[!names(df) %in% c(id_vars_samp, id_vars_site, year)]
   if(!is.null(year)){
     df_in <- pivot_longer(df, 
-                           cols=met_names,
+                           cols=all_of(met_names),
                            names_to='variable', 
                            values_drop_na=TRUE) %>%
       filter(!is.infinite(value)) %>%
       mutate(variable = as.character(variable), 
              value = as.numeric(value)) |> 
-      dplyr::rename(c(site = id_vars_site,
+      dplyr::rename(c(site = all_of(id_vars_site),
                       year = year))
   }else{
     df_in <- pivot_longer(df, 
-                          cols=met_names,
+                          cols=all_of(met_names),
                           names_to='variable', 
                           values_drop_na=TRUE) %>%
       filter(!is.infinite(value)) %>%
       mutate(variable = as.character(variable),
              value = as.numeric(value)) |> 
-      dplyr::rename(c(site = id_vars_site))
+      dplyr::rename(c(site = all_of(id_vars_site)))
   }
   
   ## Signal-to-noise ratio

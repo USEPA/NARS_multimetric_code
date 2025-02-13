@@ -23,7 +23,7 @@ redund_test <- function(df, id_vars, cutoff){
     mutate(across(all_of(met_names), as.numeric))
 
   corr_in <- tidyr::pivot_longer(df_in,
-                                 cols = met_names, 
+                                 cols = all_of(met_names), 
                                  names_to='variable',
                                  values_drop_na=TRUE) |>
     filter(!is.infinite(value)) |>
