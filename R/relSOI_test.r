@@ -5,8 +5,8 @@
 #' scope of impairment (SOI) is calculated as the ratio of the range
 #' of possible impairment (values beyond the poorer quality 25th
 #' percentile) and the interquartile range (IQR) of reference sites, a measure of
-#' variability. Relative SOI values larger than 1 are more desirable,
-#' with values less than 1 indicating too much variability among
+#' variability. Relative SOI values smaller than 1 are more desirable,
+#' with values greater than 1 indicating too much variability among
 #' reference sites compared to the range of impairment.
 #' @param df Wide data frame with one row per sample. It is assumed to only 
 #' contain one sample per sites, so if there are revisits, keep only the one 

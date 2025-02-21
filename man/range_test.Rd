@@ -10,7 +10,7 @@ range_test(
   id_vars,
   quant_zero = 0.75,
   pass_ = NULL,
-  quant_range = 1,
+  quant_range = 0.8,
   quant_range_perc = 15,
   quant_range_oth = 1/3
 )
@@ -43,16 +43,23 @@ this part is not performed.}
 \item{quant_range}{This value determines what upper proportion of sites 
 is used to evaluate metric range. For example, a value of 0.8 considers the 
 range of values in the max - 20th percentile. To examine the whole range, 
-use a value of 1. Value should be a number between 0 and 1.}
+use a value of 1. Value should be a number between 0 and 1, but the default 
+value is 0.8. This value particularly affects non-percentage metrics 
+because they do not have a set maximum. The function will fail metrics 
+for which most of the values are compressed to a small range. An example 
+would be a metric with a range of 0-30, but with only 25\% of values 
+representing range 0-27 and 75\% of values between 28-30. If this input is
+set to 1, non-percentage metrics will always pass, but percentage metrics
+will fail if the full range of values is < \strong{quant_range_perc}.}
 
 \item{quant_range_perc}{This numeric value represents a discrete value 
 to which ranges of percentage metrics are compared. For example, if 
-quant_range = 0.75 and quant_range_perc = 15, and the range of the upper 75% 
-of values is less than 15, the metric fails.}
+\strong{quant_range} = 0.75 and \strong{quant_range_perc} = 15, and 
+the range of the upper 75\% of values is less than 15, the metric fails.}
 
 \item{quant_range_oth}{Used for non-percentage metrics (e.g., richness), 
 this numeric proportion of the full range is used as a point of comparison 
-for the range determined using quant_range. For example, the default value 
+for the range determined using \strong{quant_range}. For example, the default value 
 of 1/3 multiplies the full range by 1/3. For a quant_range of 0.75 and 
 quant_range_oth of 1/3, the difference between the 25th percentile and the 
 max is compared to the max/3. If the range is less than max/3, the metric 
@@ -63,7 +70,8 @@ For each metric, provides metric name, overall RANGE_TEST result (PASS/
 PASS-/FAIL), skewness test result (zero_test, PASS/PASS-/FAIL), and
 range test result (rg_lim, PASS/FAIL). Along with these, the quantiles used
 to assess range and skewness are also provided: p0 = minimum, p100 = maximum,
-plower = minimum of
+plower = the (1 - \strong{quant_zero}) quantile, pupper = the \strong{quant_zero} quantile,
+prob_lower_rg = the (1 - \strong{quant_range}) quantile, pmid = median value
 }
 \description{
 This function evaluates the range for a set of numeric metrics as 
