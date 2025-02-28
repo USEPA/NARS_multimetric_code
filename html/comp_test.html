@@ -22,7 +22,14 @@ function processMathHTML() {
 
 <p>This function compares the most and least disturbed using a Kruskal-Wallis 
 test because metrics are typically somewhat skewed. It also performs a box 
-plot comparison using scoring developed by Tetra Tech for Florida SCI.
+plot comparison using scoring developed by Tetra Tech for the Florida SCI. 
+A score of 0-3 is provided for each metric based on the degree of overlap 
+between box plots of least and most disturbed sites. A score of 0 indicates 
+complete overlap of the two boxes and medians. A score of 1 indicates 
+that one median overlaps with the other box, and a score of 2 indicates that
+medians do not overlap but boxes do. A score of 3 indicates no overlap of 
+boxes and the highest level of discrimination between least and most
+impacted sites.
 </p>
 
 
@@ -53,17 +60,17 @@ in the data frame.</p>
 <tr><td><code id="ref_var">ref_var</code></td>
 <td>
 <p>String identifying the variable with disturbance condition 
-for each site</p>
+for each site.</p>
 </td></tr>
 <tr><td><code id="least">least</code></td>
 <td>
 <p>String representing value of ref_var indicating least 
-disturbed condition</p>
+disturbed condition.</p>
 </td></tr>
 <tr><td><code id="most">most</code></td>
 <td>
 <p>String representing value of ref_var indicating most 
-disturbed condition</p>
+disturbed condition.</p>
 </td></tr>
 </table>
 

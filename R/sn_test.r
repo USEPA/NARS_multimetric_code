@@ -12,7 +12,7 @@
 #' calibration samples. Only identifying variables and metrics should be 
 #' included in this data frame, and only numeric metrics can be included.
 #' @param id_vars_samp A character vector containing variables that identify
-#' individual samples (e.g., UID)
+#' individual samples (e.g., UID).
 #' @param id_vars_site A string containing a variable name that 
 #' identifies sites (e.g., SITE_ID). This cannot be the same or a subset of
 #' variables in `id_vars_samp`. This should not be a variable that occurs across

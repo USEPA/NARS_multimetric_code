@@ -19,13 +19,13 @@ desirable, depending on the situation.}
 in the data frame.}
 
 \item{ref_var}{String identifying the variable with disturbance condition 
-for each site}
+for each site.}
 
 \item{least}{String representing value of ref_var indicating least 
-disturbed condition}
+disturbed condition.}
 
 \item{most}{String representing value of ref_var indicating most 
-disturbed condition}
+disturbed condition.}
 }
 \value{
 The output data frame includes metric, KW_stat (Kruskal-Wallis test 
@@ -42,5 +42,12 @@ for a metric.
 \description{
 This function compares the most and least disturbed using a Kruskal-Wallis 
 test because metrics are typically somewhat skewed. It also performs a box 
-plot comparison using scoring developed by Tetra Tech for Florida SCI.
+plot comparison using scoring developed by Tetra Tech for the Florida SCI. 
+A score of 0-3 is provided for each metric based on the degree of overlap 
+between box plots of least and most disturbed sites. A score of 0 indicates 
+complete overlap of the two boxes and medians. A score of 1 indicates 
+that one median overlaps with the other box, and a score of 2 indicates that
+medians do not overlap but boxes do. A score of 3 indicates no overlap of 
+boxes and the highest level of discrimination between least and most
+impacted sites.
 }

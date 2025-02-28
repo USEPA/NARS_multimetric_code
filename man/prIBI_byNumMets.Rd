@@ -54,12 +54,12 @@ visit is the index visit to a site, with values of Yes/No. If a record has
 an indexvis value of No, it will only be included in signal-to-noise 
 calculations.}
 
-\item{least}{Value of `refVar` for least disturbed sites in dataset}
+\item{least}{Value of `refVar` for least disturbed sites in dataset.}
 
-\item{most}{Value of `refVar` for most disturbed sites in dataset}
+\item{most}{Value of `refVar` for most disturbed sites in dataset.}
 
 \item{nummets}{Numeric vector with numbers of metrics to test 
-(i.e., c(4,6) tests combinations of 4 metrics and 6 metrics)}
+(i.e., c(4,6) tests combinations of 4 metrics and 6 metrics).}
 
 \item{nsamp}{Number of random combinations to test for each number of 
 metrics, with a default of 1000.}

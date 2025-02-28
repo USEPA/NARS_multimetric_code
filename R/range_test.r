@@ -12,7 +12,7 @@
 #' this data frame should only contain calibration samples.
 #' @param perc_vars A character vector containing names or 
 #' partial names (e.g., PTAX, PIND) that clearly identify the metrics that 
-#' are percentages
+#' are percentages.
 #' @param id_vars A character vector containing any variables that 
 #' identify samples and are not metrics, making it wise to drop any variables 
 #' from the input data frame that are not necessary.
@@ -52,7 +52,7 @@
 #' range test result (rg_lim, PASS/FAIL). Along with these, the quantiles used
 #' to assess range and skewness are also provided: p0 = minimum, p100 = maximum,
 #' plower = the (1 - \strong{quant_zero}) quantile, pupper = the \strong{quant_zero} quantile,
-#' prob_lower_rg = the (1 - \strong{quant_range}) quantile, pmid = median value
+#' prob_lower_rg = the (1 - \strong{quant_range}) quantile, pmid = median value.
 range_test <- function(df, 
                       perc_vars,
                       id_vars,

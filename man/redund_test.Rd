@@ -16,7 +16,7 @@ are not.}
 the data frame.}
 
 \item{cutoff}{Minimum absolute correlation value at which metrics are 
-flagged as redundant}
+flagged as redundant. The value should be a number between 0 and 1.}
 }
 \value{
 Output dataset has `metric` with metric name, and `redund_met` is a 

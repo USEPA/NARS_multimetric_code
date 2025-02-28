@@ -10,7 +10,7 @@
 #' @param id_vars This is a character vector with any non-metric variables in 
 #' the data frame.
 #' @param cutoff Minimum absolute correlation value at which metrics are 
-#' flagged as redundant
+#' flagged as redundant. The value should be a number between 0 and 1.
 #' @returns Output dataset has `metric` with metric name, and `redund_met` is a 
 #' string containing all metrics with an absolute correlation of at least the 
 #' cutoff value, separated by commas. 

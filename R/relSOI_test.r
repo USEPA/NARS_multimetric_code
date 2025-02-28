@@ -18,11 +18,11 @@
 #' @param id_vars This is a character vector with variables to identify samples
 #' in the data frame.
 #' @param ref_var String identifying the variable with disturbance condition 
-#' for each site
+#' for each site.
 #' @param least String representing value of ref_var indicating least 
-#' disturbed condition
+#' disturbed condition.
 #' @param most String representing value of ref_var indicating most 
-#' disturbed condition
+#' disturbed condition.
 #' @returns The output data frame includes metric, least disturbed 25th 
 #' percentile (L_q1), least disturbed 75th percentile (L_q3), least disturbed
 #' median (L_median), most disturbed median (M_median), maximum value (max_val),

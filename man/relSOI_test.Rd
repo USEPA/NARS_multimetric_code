@@ -19,13 +19,13 @@ desirable, depending on the situation.}
 in the data frame.}
 
 \item{ref_var}{String identifying the variable with disturbance condition 
-for each site}
+for each site.}
 
 \item{least}{String representing value of ref_var indicating least 
-disturbed condition}
+disturbed condition.}
 
 \item{most}{String representing value of ref_var indicating most 
-disturbed condition}
+disturbed condition.}
 }
 \value{
 The output data frame includes metric, least disturbed 25th 

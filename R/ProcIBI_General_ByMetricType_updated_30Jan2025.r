@@ -41,8 +41,8 @@
 #' visit is the index visit to a site, with values of Yes/No. If a record has
 #' an indexvis value of No, it will only be included in signal-to-noise 
 #' calculations.
-#' @param least Value of `refVar` for least disturbed sites in dataset
-#' @param most Value of `refVar` for most disturbed sites in dataset
+#' @param least Value of `refVar` for least disturbed sites in dataset.
+#' @param most Value of `refVar` for most disturbed sites in dataset.
 #' @param nsamp Number of random combinations to test, with a default of 1000.
 #' @param seed Random seed to supply to random number generator used to 
 #' randomly select metric combinations. Default is 20160310.

@@ -23,7 +23,7 @@ this data frame should only contain calibration samples.}
 
 \item{perc_vars}{A character vector containing names or 
 partial names (e.g., PTAX, PIND) that clearly identify the metrics that 
-are percentages}
+are percentages.}
 
 \item{id_vars}{A character vector containing any variables that 
 identify samples and are not metrics, making it wise to drop any variables 
@@ -71,7 +71,7 @@ PASS-/FAIL), skewness test result (zero_test, PASS/PASS-/FAIL), and
 range test result (rg_lim, PASS/FAIL). Along with these, the quantiles used
 to assess range and skewness are also provided: p0 = minimum, p100 = maximum,
 plower = the (1 - \strong{quant_zero}) quantile, pupper = the \strong{quant_zero} quantile,
-prob_lower_rg = the (1 - \strong{quant_range}) quantile, pmid = median value
+prob_lower_rg = the (1 - \strong{quant_range}) quantile, pmid = median value.
 }
 \description{
 This function evaluates the range for a set of numeric metrics as 
