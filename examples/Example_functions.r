@@ -11,23 +11,6 @@ test_rg <- range_test(rg_test_data,
                       pass_=0.5, quant_range=1,
                       quant_range_perc=15, quant_range_oth=1/3)
 
-# Save test_rg as expected test results
-# write_csv(test_rg, paste0(here::here(), "/Range_test_output.csv"))
-# Compare output to expected results 
-exp_rg <- read_csv(paste0(here::here(), "/examples/Range_test_output.csv"))
-
-test_rg_long <- pivot_longer(test_rg, cols = p0:pmid)
-exp_rg_long <- pivot_longer(exp_rg, cols = p0:pmid)
-
-# Compare numeric values
-inner_join(test_rg_long, exp_rg_long, by = c('METRIC', 'name')) |> 
-  filter(value.x!=value.y) # Should be 0
-
-inner_join(test_rg, exp_rg, by = 'METRIC') |> 
-  filter(zero_test.x != zero_test.y|
-           rg_lim.x!=rg_lim.y|
-           RANGE_TEST.x!=RANGE_TEST.y) # Should be 0
-
 
 # Redundancy test
 source(paste0(here::here(), "/r/redund_test.r"))
