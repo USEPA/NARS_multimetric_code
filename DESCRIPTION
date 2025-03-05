@@ -1,8 +1,8 @@
 Package: NARS_multimetrics_code
 Type: Package
 Title: Legacy functions related to building a multimetric index
-Version: 2.0.0
-Date: 2025-01-23
+Version: 2.0.1
+Date: 2025-02-28
 Author: Karen Blocksom
 Maintainer: blocksom.karen@epa.gov
 Description: This is a set of legacy code used to generate documentation of 
