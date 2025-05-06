@@ -7,6 +7,19 @@ to screen candidate metrics and perform best subsets analysis to evaluate
 various combinations of metrics for use in a multimetric index (MMI). There are 
 examples that can be used to see how to call the functions.
 
+## Details
+
+To use the code in this repository, there are a few key folders to use. The 
+`R` folder contains the code for the various functions. Opening these files 
+allows the user to update or alter the code for their own purposes. The `html`
+folder contains the help file for each function, whereas the `man` folder 
+contains the markdown file used to create the .html files. The code and data 
+used to run examples are contained in the `examples` folder. 
+
+To run the examples without having to alter the code, use the .Rproj file to 
+open as a project in R. That will allow the code using the `here::here()` 
+function to locate data files. 
+
 
 ## Disclaimer
 
